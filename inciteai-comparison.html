@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>incite.ai — Pro vs MAX Comparison</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --bg-card: #131920;
+    --border: rgba(255,255,255,0.07);
+    --text-primary: #f0ede8;
+    --text-secondary: #8a9ab0;
+    --text-muted: #505f72;
+    --teal: #1D9E75;
+    --teal-fill: rgba(29,158,117,0.08);
+    --teal-border: rgba(29,158,117,0.3);
+    --teal-dark: #085041;
+    --teal-text: #4ec9b0;
+    --blue: #378ADD;
+    --blue-fill: rgba(55,138,221,0.08);
+    --blue-border: rgba(55,138,221,0.25);
+    --blue-text: #7bbff0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    padding: 40px 16px 80px;
+  }
+
+  .wrap {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* Page header */
+  .page-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .page-header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    letter-spacing: -0.01em;
+  }
+
+  .page-header p {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Table wrapper */
+  .table-wrap {
+    border-radius: 14px;
+    overflow: hidden;
+    border: 0.5px solid var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  /* Column headers */
+  thead tr {
+    background: var(--bg-card);
+  }
+
+  thead th {
+    padding: 0.875rem 1rem;
+    font-size: 13px;
+    font-weight: 500;
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  thead th:first-child {
+    text-align: left;
+    color: var(--text-muted);
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    width: 50%;
+  }
+
+  thead th.col-pro {
+    text-align: center;
+    background: var(--teal-fill);
+    border-left: 0.5px solid var(--teal-border);
+    border-right: 0.5px solid var(--teal-border);
+  }
+
+  thead th.col-max {
+    text-align: center;
+    background: var(--blue-fill);
+    border-right: 0.5px solid var(--blue-border);
+  }
+
+  .col-name {
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .col-name.pro { color: var(--teal-text); }
+  .col-name.max { color: var(--blue-text); }
+
+  .col-price {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: block;
+  }
+
+  /* Section rows */
+  .section-row td {
+    background: rgba(255,255,255,0.02);
+    padding: 8px 1rem 4px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  .section-row td.col-pro {
+    background: rgba(29,158,117,0.04);
+    border-left: 0.5px solid var(--teal-border);
+    border-right: 0.5px solid var(--teal-border);
+  }
+
+  .section-row td.col-max {
+    background: rgba(55,138,221,0.04);
+    border-right: 0.5px solid var(--blue-border);
+  }
+
+  /* Data rows */
+  tbody tr.data-row {
+    border-bottom: 0.5px solid var(--border);
+  }
+
+  tbody tr.data-row:last-child {
+    border-bottom: none;
+  }
+
+  tbody tr.data-row td {
+    padding: 10px 1rem;
+    font-size: 13px;
+    vertical-align: middle;
+  }
+
+  tbody tr.data-row td:first-child {
+    color: var(--text-primary);
+    line-height: 1.4;
+  }
+
+  tbody tr.data-row td.col-pro {
+    text-align: center;
+    background: var(--teal-fill);
+    border-left: 0.5px solid var(--teal-border);
+    border-right: 0.5px solid var(--teal-border);
+  }
+
+  tbody tr.data-row td.col-max {
+    text-align: center;
+    background: var(--blue-fill);
+    border-right: 0.5px solid var(--blue-border);
+  }
+
+  /* Check and X */
+  .check-pro { color: var(--teal); font-size: 16px; }
+  .check-max { color: var(--blue-text); font-size: 16px; }
+  .x-mark { color: var(--text-muted); font-size: 14px; opacity: 0.4; }
+
+  /* Value labels */
+  .val {
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+
+  .val-pro {
+    background: rgba(29,158,117,0.12);
+    color: var(--teal-text);
+  }
+
+  .val-max {
+    background: rgba(55,138,221,0.12);
+    color: var(--blue-text);
+  }
+
+  /* CTA footer */
+  tfoot td {
+    padding: 1rem;
+    border-top: 0.5px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  tfoot td.col-pro {
+    background: var(--teal-fill);
+    border-left: 0.5px solid var(--teal-border);
+    border-right: 0.5px solid var(--teal-border);
+    text-align: center;
+  }
+
+  tfoot td.col-max {
+    background: var(--blue-fill);
+    border-right: 0.5px solid var(--blue-border);
+    text-align: center;
+  }
+
+  .cta {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: opacity 0.15s;
+  }
+
+  .cta:hover { opacity: 0.9; }
+  .cta:active { opacity: 0.8; }
+
+  .cta-pro {
+    background: var(--teal);
+    color: #fff;
+  }
+
+  .cta-max {
+    background: var(--blue);
+    color: #fff;
+  }
+
+  .cta-sub {
+    display: block;
+    font-size: 10px;
+    margin-top: 5px;
+    color: var(--text-muted);
+  }
+
+  /* Fine print */
+  .fine {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1.5rem;
+    line-height: 1.7;
+  }
+
+  .fine a {
+    color: var(--teal-text);
+    text-decoration: none;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="page-header">
+    <h1>Pro vs MAX</h1>
+    <p>Full feature comparison</p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th class="col-pro">
+            <span class="col-name pro">Pro</span>
+            <span class="col-price">$16.67/mo annual</span>
+          </th>
+          <th class="col-max">
+            <span class="col-name max">MAX</span>
+            <span class="col-price">$125/mo annual</span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- AI & Analysis -->
+        <tr class="section-row">
+          <td>AI &amp; analysis</td>
+          <td class="col-pro"></td>
+          <td class="col-max"></td>
+        </tr>
+        <tr class="data-row">
+          <td>AI reasoning model</td>
+          <td class="col-pro"><span class="val val-pro">Advanced</span></td>
+          <td class="col-max"><span class="val val-max">Advanced</span></td>
+        </tr>
+        <tr class="data-row">
+          <td>AI shows its reasoning</td>
+          <td class="col-pro">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+        <tr class="data-row">
+          <td>Extended deep-dive analysis mode</td>
+          <td class="col-pro">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+        <tr class="data-row">
+          <td>Parallel active chats</td>
+          <td class="col-pro"><span class="x-mark">—</span></td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+        <tr class="data-row">
+          <td>Priority response times</td>
+          <td class="col-pro"><span class="x-mark">—</span></td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+
+        <!-- Usage limits -->
+        <tr class="section-row">
+          <td>Usage limits</td>
+          <td class="col-pro"></td>
+          <td class="col-max"></td>
+        </tr>
+        <tr class="data-row">
+          <td>Daily questions</td>
+          <td class="col-pro"><span class="val val-pro">High</span></td>
+          <td class="col-max"><span class="val val-max">Maximum</span></td>
+        </tr>
+        <tr class="data-row">
+          <td>Data volume per query</td>
+          <td class="col-pro"><span class="val val-pro">Large</span></td>
+          <td class="col-max"><span class="val val-max">No cap</span></td>
+        </tr>
+        <tr class="data-row">
+          <td>Ticker coverage</td>
+          <td class="col-pro"><span class="val val-pro">Broad</span></td>
+          <td class="col-max"><span class="val val-max">Full</span></td>
+        </tr>
+
+        <!-- Market data -->
+        <tr class="section-row">
+          <td>Market data</td>
+          <td class="col-pro"></td>
+          <td class="col-max"></td>
+        </tr>
+        <tr class="data-row">
+          <td>Live options flow</td>
+          <td class="col-pro"><span class="val val-pro">Included</span></td>
+          <td class="col-max"><span class="val val-max">Expanded</span></td>
+        </tr>
+        <tr class="data-row">
+          <td>Historical pricing data</td>
+          <td class="col-pro"><span class="val val-pro">Included</span></td>
+          <td class="col-max"><span class="val val-max">Deep</span></td>
+        </tr>
+
+        <!-- Workflow -->
+        <tr class="section-row">
+          <td>Workflow</td>
+          <td class="col-pro"></td>
+          <td class="col-max"></td>
+        </tr>
+        <tr class="data-row">
+          <td>Export to PDF, Word, Excel</td>
+          <td class="col-pro">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+        <tr class="data-row">
+          <td>Upload charts and filings for analysis</td>
+          <td class="col-pro">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+        <tr class="data-row">
+          <td>Autonomous trade tracking and alerts</td>
+          <td class="col-pro"><span class="x-mark">—</span></td>
+          <td class="col-max">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <circle cx="8" cy="8" r="7" fill="rgba(55,138,221,0.15)" stroke="#378ADD" stroke-width="1"/>
+              <path d="M5 8l2 2 4-4" stroke="#378ADD" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </td>
+        </tr>
+
+        <!-- Support -->
+        <tr class="section-row">
+          <td>Support</td>
+          <td class="col-pro"></td>
+          <td class="col-max"></td>
+        </tr>
+        <tr class="data-row">
+          <td>Support channel</td>
+          <td class="col-pro"><span class="val val-pro">Standard</span></td>
+          <td class="col-max"><span class="val val-max">Live chat</span></td>
+        </tr>
+
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td class="col-pro">
+            <button class="cta cta-pro">Start free trial</button>
+            <span class="cta-sub">7 days free · no charge today</span>
+          </td>
+          <td class="col-max">
+            <button class="cta cta-max">Upgrade to MAX</button>
+            <span class="cta-sub">7 days free for eligible subscribers</span>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+
+  <p class="fine">
+    Eligible new Pro subscribers start with a 7-day free trial. Credit card required. Cancel anytime before day 7 to avoid billing.<br>
+    Subscriptions auto-renew until cancelled. Payments are non-refundable.<br>
+    By subscribing you agree to the <a href="#">Terms of Service</a>.
+  </p>
+
+</div>
+</body>
+</html>

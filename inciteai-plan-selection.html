@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>incite.ai — Plan Selection</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --bg-card: #131920;
+    --bg-card-hover: #161f29;
+    --border: rgba(255,255,255,0.07);
+    --border-pro: rgba(180,155,90,0.35);
+    --border-max: rgba(80,200,175,0.35);
+    --text-primary: #f0ede8;
+    --text-secondary: #8a9ab0;
+    --text-muted: #505f72;
+    --gold: #c9a84c;
+    --gold-light: #e8c878;
+    --teal: #4ec9b0;
+    --teal-light: #7eddd0;
+    --check-pro: #c9a84c;
+    --check-max: #4ec9b0;
+  }
+
+  html { font-size: 16px; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    min-height: 100vh;
+    padding: 0 0 80px;
+    background-image:
+      radial-gradient(ellipse 60% 40% at 20% 0%, rgba(78,201,176,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 35% at 80% 10%, rgba(201,168,76,0.05) 0%, transparent 55%);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 52px 24px 40px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 18px;
+  }
+
+  .headline {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 6vw, 36px);
+    line-height: 1.15;
+    color: var(--text-primary);
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  .headline em {
+    font-style: italic;
+    color: var(--gold-light);
+  }
+
+  .subhead {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 420px;
+    margin: 0 auto 32px;
+  }
+
+  /* ── SOCIAL PROOF ── */
+  .social-proof {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 0 24px 36px;
+    max-width: 512px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+  }
+
+  .social-proof blockquote {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .social-proof cite {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    font-style: normal;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── BILLING TOGGLE ── */
+  .billing-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 32px;
+    padding: 0 24px;
+  }
+
+  .billing-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .toggle {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px;
+  }
+
+  .toggle button {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .toggle button.active {
+    background: var(--teal);
+    color: #0d1117;
+    font-weight: 600;
+  }
+
+  .save-badge {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal);
+    background: rgba(78,201,176,0.1);
+    border: 1px solid rgba(78,201,176,0.2);
+    border-radius: 100px;
+    padding: 4px 10px;
+  }
+
+  /* ── CARDS ── */
+  .cards {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0 16px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 28px 24px 24px;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .card:active { transform: scale(0.995); }
+
+  .card-pro {
+    border: 1px solid var(--border-pro);
+    box-shadow: 0 0 40px rgba(201,168,76,0.05), inset 0 1px 0 rgba(201,168,76,0.08);
+  }
+
+  .card-max {
+    border: 1px solid var(--border-max);
+    box-shadow: 0 0 40px rgba(78,201,176,0.06), inset 0 1px 0 rgba(78,201,176,0.1);
+  }
+
+  .plan-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 6px;
+  }
+
+  .badge-pro {
+    background: rgba(201,168,76,0.15);
+    color: var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.25);
+  }
+
+  .badge-max {
+    background: rgba(78,201,176,0.12);
+    color: var(--teal-light);
+    border: 1px solid rgba(78,201,176,0.22);
+  }
+
+  .plan-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 26px;
+    letter-spacing: -0.01em;
+    margin-bottom: 4px;
+  }
+
+  .plan-descriptor {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 22px;
+    line-height: 1.45;
+  }
+
+  .trial-callout {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--teal);
+    background: rgba(78,201,176,0.08);
+    border: 1px solid rgba(78,201,176,0.18);
+    border-radius: 100px;
+    padding: 5px 12px;
+    margin-bottom: 20px;
+  }
+
+  .trial-callout svg {
+    flex-shrink: 0;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+
+  .price-main {
+    font-family: 'DM Serif Display', serif;
+    font-size: 40px;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .price-period {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 400;
+  }
+
+  .price-annual {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    line-height: 1.4;
+  }
+
+  .price-annual strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* ── FEATURES ── */
+  .features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+    margin-bottom: 26px;
+  }
+
+  .feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--text-primary);
+  }
+
+  .check {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+
+  .check-pro {
+    background: rgba(201,168,76,0.12);
+  }
+
+  .check-max {
+    background: rgba(78,201,176,0.1);
+  }
+
+  .feature-text strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 1px;
+  }
+
+  .feature-sub {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  /* ── DIVIDER ── */
+  .max-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    margin-top: 4px;
+  }
+
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0 16px;
+  }
+
+  /* ── CTA BUTTONS ── */
+  .cta {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .cta-pro {
+    background: linear-gradient(135deg, var(--gold) 0%, #a07830 100%);
+    color: #0d1117;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.25);
+  }
+
+  .cta-pro:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(201,168,76,0.2);
+  }
+
+  .cta-max {
+    background: linear-gradient(135deg, var(--teal) 0%, #2a9a85 100%);
+    color: #0d1117;
+    box-shadow: 0 4px 20px rgba(78,201,176,0.2);
+  }
+
+  .cta-max:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(78,201,176,0.15);
+  }
+
+  .cta-sub {
+    text-align: center;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── COMPARISON ANCHOR ── */
+  .comparison-anchor {
+    max-width: 528px;
+    margin: 28px auto 0;
+    padding: 0 16px;
+  }
+
+  .anchor-inner {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .anchor-icon {
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .anchor-text {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .anchor-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* ── FINE PRINT ── */
+  .fine-print {
+    max-width: 528px;
+    margin: 24px auto 0;
+    padding: 0 20px;
+    font-size: 11px;
+    color: var(--text-muted);
+    line-height: 1.7;
+    text-align: center;
+  }
+
+  .fine-print a {
+    color: var(--teal);
+    text-decoration: none;
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .header    { animation: fadeUp 0.5s ease both; }
+  .social-proof { animation: fadeUp 0.5s 0.1s ease both; }
+  .billing-section { animation: fadeUp 0.5s 0.15s ease both; }
+  .card-pro  { animation: fadeUp 0.5s 0.2s ease both; }
+  .card-max  { animation: fadeUp 0.5s 0.3s ease both; }
+  .comparison-anchor { animation: fadeUp 0.5s 0.35s ease both; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <p class="eyebrow">Plan Levels</p>
+  <h1 class="headline">Institutional-grade analysis.<br><em>No Bloomberg required.</em></h1>
+  <p class="subhead">Pro gives you real-time AI analysis for serious investors. MAX adds the speed and depth that active traders depend on.</p>
+</header>
+
+<!-- SOCIAL PROOF -->
+<div class="social-proof">
+  <blockquote>"I asked a question I'd have spent 40 minutes researching on Seeking Alpha. Got the answer in 20 seconds -- with the reasoning behind it."</blockquote>
+  <cite>-- Pro subscriber, managing a $180K portfolio</cite>
+</div>
+
+<!-- BILLING TOGGLE -->
+<div class="billing-section">
+  <div class="toggle-wrap">
+    <span class="billing-label">Billing</span>
+    <div class="toggle">
+      <button>Monthly</button>
+      <button class="active">Annual</button>
+    </div>
+    <span class="save-badge">Save 16.6%</span>
+  </div>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+
+  <!-- PRO CARD -->
+  <div class="card card-pro">
+    <div class="plan-badge badge-pro">Most Popular</div>
+    <h2 class="plan-name">Pro</h2>
+    <p class="plan-descriptor">For investors who want better answers before they buy or sell</p>
+
+    <div class="trial-callout">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+        <circle cx="6.5" cy="6.5" r="5.5" stroke="#4ec9b0" stroke-width="1.5"/>
+        <path d="M6.5 3.5v3l2 1.5" stroke="#4ec9b0" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      7-day free trial &mdash; no charge today
+    </div>
+
+    <div class="price-row">
+      <span class="price-main">$16.67</span>
+      <span class="price-period">/mo</span>
+    </div>
+    <p class="price-annual">Billed annually at <strong>$199.99</strong> &nbsp;&middot;&nbsp; Cancel anytime</p>
+
+    <ul class="features">
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>AI that explains its thesis, not just its conclusion</strong>
+          <span class="feature-sub">Advanced reasoning model -- every answer shows its work</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Research as many positions as your portfolio demands</strong>
+          <span class="feature-sub">High daily message limits -- no throttling mid-research</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Live options flow included</strong>
+          <span class="feature-sub">Puts, calls, unusual activity -- in real time</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Deep-dive mode for earnings, catalysts, and complex setups</strong>
+          <span class="feature-sub">Extended analysis with broader ticker coverage</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Export analysis to PDF, Word, or Excel</strong>
+          <span class="feature-sub">Ready to act on -- or share with your advisor</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Drop in a chart or filing; get analysis back in plain language</strong>
+          <span class="feature-sub">Upload images and documents for AI interpretation</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-pro">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#c9a84c" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Historical price context for every answer</strong>
+          <span class="feature-sub">Trend, pattern, and timing data included</span>
+        </span>
+      </li>
+    </ul>
+
+    <button class="cta cta-pro">Start 7-Day Free Trial</button>
+    <p class="cta-sub">No charge today &nbsp;&middot;&nbsp; Credit card required &nbsp;&middot;&nbsp; Cancel before trial ends to avoid billing</p>
+  </div>
+
+  <!-- MAX CARD -->
+  <div class="card card-max">
+    <div class="plan-badge badge-max">Most Powerful</div>
+    <h2 class="plan-name">MAX</h2>
+    <p class="plan-descriptor">For traders who run multiple positions and can't afford to wait on answers</p>
+
+    <div class="price-row">
+      <span class="price-main">$125</span>
+      <span class="price-period">/mo</span>
+    </div>
+    <p class="price-annual">Billed annually at <strong>$1,499.99</strong> &nbsp;&middot;&nbsp; Cancel anytime</p>
+
+    <p class="max-label">Everything in Pro, plus</p>
+
+    <ul class="features">
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Full data depth -- no caps on what the AI can analyze</strong>
+          <span class="feature-sub">Maximum data volume across every query</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Run parallel analysis on multiple tickers simultaneously</strong>
+          <span class="feature-sub">Multiple active chats -- ask the next question before the last one finishes</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Expanded options flow -- full chain depth and historical context</strong>
+          <span class="feature-sub">Deeper data than Pro for serious options traders</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Watchlist alerts that track your positions and flag changes automatically</strong>
+          <span class="feature-sub">Autonomous trade tracking -- you get notified, not blindsided</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Priority processing -- faster answers when the market is moving</strong>
+          <span class="feature-sub">Response time advantage when speed matters most</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Direct support when you're mid-decision and need a fast answer</strong>
+          <span class="feature-sub">Live chat with the team -- not a ticket queue</span>
+        </span>
+      </li>
+      <li class="feature">
+        <span class="check check-max">
+          <svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="#4ec9b0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <span class="feature-text">
+          <strong>Deep historical pricing for backtesting and pattern recognition</strong>
+          <span class="feature-sub">Extended historical data beyond the Pro tier</span>
+        </span>
+      </li>
+    </ul>
+
+    <button class="cta cta-max">Start MAX Free Trial</button>
+    <p class="cta-sub">Includes 7-day free trial for eligible new subscribers &nbsp;&middot;&nbsp; Cancel anytime</p>
+  </div>
+
+</div>
+
+<!-- COMPARISON ANCHOR -->
+<div class="comparison-anchor">
+  <div class="anchor-inner">
+    <span class="anchor-icon">📊</span>
+    <p class="anchor-text">
+      Bloomberg Terminal costs <strong>$24,000/year</strong>. A Bloomberg-caliber answer on any ticker, anytime you need it, now starts at <strong>$16.67/month</strong>.
+    </p>
+  </div>
+</div>
+
+<!-- FINE PRINT -->
+<p class="fine-print">
+  Eligible new Pro subscribers start with a 7-day free trial. A credit card is required to begin the trial &mdash; cancel before the trial ends to avoid being charged. By subscribing you agree to our <a href="#">Terms of Service</a>. Subscriptions auto-renew until cancelled. A verified email is required to subscribe. If you've subscribed on another platform, manage your subscription through that platform. Payments are non-refundable.
+</p>
+
+</body>
+</html>

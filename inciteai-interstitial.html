@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>incite.ai — Upgrade to Continue</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --bg-card: #131920;
+    --border: rgba(255,255,255,0.07);
+    --border-pro: rgba(29,158,117,0.5);
+    --border-max: rgba(55,138,221,0.3);
+    --text-primary: #f0ede8;
+    --text-secondary: #8a9ab0;
+    --text-muted: #505f72;
+    --teal: #1D9E75;
+    --teal-light: #E1F5EE;
+    --teal-mid: #9FE1CB;
+    --teal-dark: #085041;
+    --blue: #378ADD;
+    --blue-light: #E6F1FB;
+    --blue-mid: #B5D4F4;
+    --blue-dark: #185FA5;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px 80px;
+  }
+
+  .wrap {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  /* Progress dots */
+  .context {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .dot.active {
+    background: var(--teal);
+  }
+
+  .context-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  /* Headline */
+  h1 {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .sub {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Quote */
+  .quote {
+    border-left: 2px solid var(--teal);
+    padding: 0.5rem 0 0.5rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .quote p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-style: italic;
+    line-height: 1.55;
+    margin: 0 0 4px;
+  }
+
+  .quote cite {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-style: normal;
+  }
+
+  /* Cards */
+  .card {
+    background: var(--bg-card);
+    border-radius: 14px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-pro {
+    border: 2px solid var(--teal);
+  }
+
+  .card-max {
+    border: 0.5px solid var(--border-max);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 0.25rem;
+  }
+
+  .plan-name {
+    font-size: 18px;
+    font-weight: 600;
+  }
+
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  .badge-pop {
+    background: rgba(29,158,117,0.15);
+    color: var(--teal);
+    border: 1px solid rgba(29,158,117,0.25);
+  }
+
+  .badge-pow {
+    background: rgba(55,138,221,0.12);
+    color: var(--blue);
+    border: 1px solid rgba(55,138,221,0.2);
+  }
+
+  .trial-line {
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+  }
+
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin-bottom: 2px;
+  }
+
+  .price {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .price-sm {
+    font-size: 22px;
+  }
+
+  .period {
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .annual {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  /* Features */
+  .features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .feature {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-primary);
+  }
+
+  .check-icon {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+  }
+
+  /* MAX summary */
+  .divider {
+    height: 0.5px;
+    background: rgba(255,255,255,0.07);
+    margin: 0.75rem 0;
+  }
+
+  .max-summary {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 0.75rem;
+  }
+
+  /* CTAs */
+  .cta {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.15s;
+    font-family: inherit;
+  }
+
+  .cta:hover { opacity: 0.9; }
+  .cta:active { opacity: 0.8; transform: scale(0.99); }
+
+  .cta-primary {
+    background: var(--teal);
+    color: #fff;
+  }
+
+  .cta-secondary {
+    background: rgba(255,255,255,0.05);
+    color: var(--text-primary);
+    border: 0.5px solid rgba(255,255,255,0.12);
+  }
+
+  .cta-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  /* Compare link */
+  .compare-link {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 0.75rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    background: none;
+    border: none;
+    font-family: inherit;
+    padding: 0;
+    width: 100%;
+  }
+
+  .compare-link:hover { color: var(--text-primary); }
+
+  /* Footer */
+  .fine {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 1.25rem;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Progress context -->
+  <div class="context">
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <span class="context-text">You've used your 4 free questions today</span>
+  </div>
+
+  <h1>Keep your research going</h1>
+  <p class="sub">Unlock unlimited questions, live market data, and AI that explains its reasoning — not just its answer.</p>
+
+  <div class="quote">
+    <p>"I asked a question I'd have spent 40 minutes researching on Seeking Alpha. Got the answer in 20 seconds — with the reasoning behind it."</p>
+    <cite>— Pro subscriber, $180K portfolio</cite>
+  </div>
+
+  <!-- Pro card -->
+  <div class="card card-pro">
+    <div class="card-header">
+      <span class="plan-name">Pro</span>
+      <span class="badge badge-pop">Most popular</span>
+    </div>
+    <p class="trial-line">7 days free — no charge today</p>
+    <div class="price-row">
+      <span class="price">$16.67</span>
+      <span class="period">/mo</span>
+    </div>
+    <p class="annual">Billed annually at $199.99 · Cancel anytime</p>
+
+    <ul class="features">
+      <li class="feature">
+        <svg class="check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+          <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Unlimited questions — research every position in your portfolio
+      </li>
+      <li class="feature">
+        <svg class="check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+          <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        AI that shows its reasoning — not just the conclusion
+      </li>
+      <li class="feature">
+        <svg class="check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+          <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Live options flow, historical pricing, broader ticker coverage
+      </li>
+      <li class="feature">
+        <svg class="check-icon" viewBox="0 0 16 16" fill="none">
+          <circle cx="8" cy="8" r="7" fill="rgba(29,158,117,0.15)" stroke="#1D9E75" stroke-width="1"/>
+          <path d="M5 8l2 2 4-4" stroke="#1D9E75" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Export to PDF, Word, or Excel
+      </li>
+    </ul>
+
+    <button class="cta cta-primary">Start 7-day free trial</button>
+    <p class="cta-sub">Credit card required · Cancel before day 7 to avoid billing</p>
+  </div>
+
+  <!-- MAX card -->
+  <div class="card card-max">
+    <div class="card-header">
+      <span class="plan-name">MAX</span>
+      <span class="badge badge-pow">Most powerful</span>
+    </div>
+    <p class="max-summary">Everything in Pro, plus parallel analysis, expanded options data, autonomous trade tracking, and priority response times.</p>
+    <div class="divider"></div>
+    <div class="price-row">
+      <span class="price price-sm">$125</span>
+      <span class="period">/mo</span>
+    </div>
+    <p class="annual">Billed annually at $1,499.99</p>
+    <button class="cta cta-secondary">Upgrade to MAX</button>
+  </div>
+
+  <button class="compare-link">Compare all features in detail →</button>
+
+  <p class="fine">Bloomberg Terminal costs $24,000/year. You just used the free version of the alternative.</p>
+
+</div>
+</body>
+</html>
